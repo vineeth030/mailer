@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('subject');
-            $table->text('recipient_list');
+            $table->text('recipient_list')->nullable();
             $table->longText('body');
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();

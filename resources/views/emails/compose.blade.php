@@ -16,7 +16,7 @@
                 <input type="text"
                        id="subject"
                        name="subject"
-                       value="{{ old('subject') }}"
+                       value="{{ old('subject', $emailBody->subject ?? '' ) }}"
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                        placeholder="Enter email subject"
                        required>
@@ -25,22 +25,6 @@
                 @enderror
             </div>
 
-            <!-- Recipient List -->
-            <div class="mb-6">
-                <label for="recipient_list" class="block text-sm font-medium text-gray-700 mb-2">
-                    Recipient List
-                </label>
-                <textarea id="recipient_list"
-                          name="recipient_list"
-                          rows="3"
-                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Enter email addresses separated by commas (e.g., user1@example.com, user2@example.com)"
-                          required>{{ old('recipient_list') }}</textarea>
-                <p class="mt-1 text-sm text-gray-500">Separate multiple email addresses with commas</p>
-                @error('recipient_list')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
 
             <!-- Email Body -->
             <div class="mb-6">
@@ -51,7 +35,7 @@
                           name="body"
                           rows="10"
                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          required>{{ old('body') }}</textarea>
+                          >{!! old('body', $emailBody->body ?? $defaultTemplate) !!}</textarea>
                 @error('body')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -73,7 +57,7 @@
 </div>
 
 <!-- TinyMCE CDN -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/om8lgkuyrqnd7f5c482vbvj2eyf4bs0u2wjzw4j8tfwqgaxh/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
 <script>
     tinymce.init({
         selector: '#body',
@@ -88,6 +72,11 @@
                   alignleft aligncenter alignright alignjustify | \
                   bullist numlist outdent indent | removeformat | help',
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+
+    // Ensure TinyMCE saves content back into textarea before submit
+    document.querySelector("form").addEventListener("submit", function() {
+        tinymce.triggerSave();
     });
 </script>
 @endsection
